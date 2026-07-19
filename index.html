@@ -313,6 +313,21 @@
             .card { border: 1px solid #333 !important; }
             .signature-section { margin-top: 100px; page-break-inside: avoid; }
         }
+                /* SYSTEM FOOTER STYLING */
+        .portal-footer {
+            text-align: center; 
+            margin-top: 50px; 
+            padding-top: 15px; 
+            border-top: 1px solid #e2e8f0; 
+            font-size: 13px; 
+            color: #64748b; 
+            font-weight: 500;
+        }
+
+        .portal-footer-author {
+            color: #002060; 
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -451,7 +466,11 @@
             <div class="sig-box">Approved By (Finance Head)</div>
         </section>
     </div>
-
+        <!-- CLEAN SYSTEM FOOTER USING EXTERNAL CSS -->
+        <footer class="portal-footer">
+            Designed by <span class="portal-footer-author">M. Moazzam</span> | © 2026 All Rights Reserved
+        </footer>
+    
     <!-- JAVASCRIPT STATE ENGINE -->
     <script>
         let BUDGET = parseFloat(localStorage.getItem('idc_budget')) || 500000;
