@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDC G-8 Branch - Monthly Expense Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* HEADER ALIGNMENT FIX */
+        .main-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+        }
+
+        .header-title-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .idc-logo {
+            max-width: 80px;
+            height: auto;
+            display: block;
+        }
+
+        .main-header h1 {
+            color: #002060;
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .main-header p {
+            color: #555;
+            font-style: italic;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* NEW MONTH & YEAR SELECTOR DISPLAY BAR */
+        .month-selector-bar {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #002060;
+            padding-bottom: 20px;
+        }
+
+        .month-selector-bar label {
+            font-weight: bold;
+            color: #002060;
+            font-size: 15px;
+            margin-right: 8px;
+        }
+
+        .month-selector-bar select {
+            padding: 6px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333;
+            background-color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Summary Grid */
+        .summary-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .card h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .card p {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .budget-card { background-color: #e6f0fa; color: #002060; }
+        .expense-card { background-color: #fde8e8; color: #9b1c1c; }
+        .remaining-card { background-color: #def7ec; color: #03543f; }
+        
+        .budget-danger {
+            background-color: #fde8e8 !important;
+            color: #dc2626 !important;
+            border: 1.5px solid #dc2626 !important;
+            animation: pulse-danger 2s infinite;
+        }
+
+        @keyframes pulse-danger {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+
+        .btn-edit-budget {
+            background-color: #002060;
+            color: white;
+            border: none;
+            padding: 3px 8px;
+            font-size: 11px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        /* Toolbar Actions */
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .btn-toolbar {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+            background-color: #0d9488;
+            transition: opacity 0.2s;
+        }
+
+        .btn-toolbar:hover { opacity: 0.9; }
+        .btn-clear-data { background-color: #dc2626; }
+        .btn-excel { background-color: #16a34a; }
+
+        /* Filter bar block styling */
+        .filter-section {
+            background-color: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .filter-section input, .filter-section select {
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        /* Form Styling */
+        .form-section {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-section h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #002060;
+        }
+
+        #expense-form {
+            display: grid;
+            grid-template-columns: 1.5fr 2fr 3.5fr 1.5fr 1.2fr;
+            gap: 10px;
+        }
+
+        #expense-form input, #expense-form select {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .btn-add {
+            background-color: #002060;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            background-color: #002060;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) { background-color: #f8fafc; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        .grand-total-row td {
+            background-color: #f1f5f9;
+            border-top: 2px solid #002060;
+            font-size: 15px;
+        }
+
+        .action-container {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .btn-action-edit {
+            background-color: #d97706;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-delete {
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Verification Signature Section Layout */
+        .signature-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .sig-box {
+            border-top: 1.5px dashed #333;
+            padding-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        /* PRINT MANAGEMENT FOR EXCEL/PDF LOOK */
+        @media print {
+            body { background-color: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; width: 100%; }
+            .form-section, .toolbar, .filter-section, .action-container, th:last-child, td:last-child, .btn-edit-budget {
+                display: none !important;
+            }
+            .month-selector-bar select {
+                border: none !important;
+                background: transparent !important;
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                font-size: 16px !important;
+                color: #002060 !important;
+            }
+            th, td { padding: 10px; border: 1px solid #333; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .card { border: 1px solid #333 !important; }
+            .signature-section { margin-top: 100px; page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Header Area with Alignment Fix -->
+        <header class="main-header">
+            <div class="header-title-container">
+                <img src="Logo.jpg" alt="IDC Corporate Logo" class="idc-logo">
+                <h1>ISLAMABAD DIAGNOSTIC CENTER (PVT) LTD.</h1>
+            </div>
+            <p>Monthly Expense Sheet IDC G-8 Branch Islamabad</p>
+        </header>
+
+        <!-- New Month & Year Dynamic Selection Bar -->
+        <div class="month-selector-bar">
+            <label for="sheet-month">Report Month:</label>
+            <select id="sheet-month" onchange="saveReportPeriod()">
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+            </select>
+
+            <label for="sheet-year" style="margin-left: 15px;">Year:</label>
+            <select id="sheet-year" onchange="saveReportPeriod()">
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
+                <option value="2031">2031</option>
+                <option value="2032">2032</option>
+                <option value="2033">2033</option>
+                <option value="2034">2034</option>
+                <option value="2035">2035</option>
+            </select>
+        </div>
+
+        <!-- Dynamic Action Toolbar -->
+        <div class="toolbar">
+            <button class="btn-toolbar btn-excel" onclick="exportToExcel()">📊 Export to Excel</button>
+            <button class="btn-toolbar btn-clear-data" onclick="clearAllData()">🗑️ Clear Sheet Data</button>
+            <button class="btn-toolbar" onclick="window.print()">🖨️ Save Report (PDF) / Print</button>
+        </div>
+
+        <!-- Live Summary Block -->
+        <section class="summary-section">
+            <div class="card budget-card">
+                <h3>Total Budget</h3>
+                <p id="total-budget">PKR 500,000</p>
+                <button class="btn-edit-budget" onclick="changeBudget()">Edit Budget</button>
+            </div>
+            <div class="card expense-card">
+                <h3>Total Expense</h3>
+                <p id="total-expense">PKR 0</p>
+            </div>
+            <div class="card remaining-card" id="remaining-card-block">
+                <h3>Remaining</h3>
+                <p id="remaining-budget">PKR 500,000</p>
+            </div>
+        </section>
+
+        <!-- Expense Form -->
+        <section class="form-section">
+            <h2 id="form-title">Add New Expense Row</h2>
+            <form id="expense-form">
+                <input type="date" id="exp-date" required>
+                <select id="exp-category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Lab Chemicals">Lab Chemicals</option>
+                    <option value="Medical Supplies">Medical Supplies</option>
+                    <option value="Branch Maintenance">Branch Maintenance</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Refreshments & Welfare">Refreshments & Welfare</option>
+                    <option value="Printing & Stationery">Printing & Stationery</option>
+                </select>
+                <input type="text" id="exp-desc" placeholder="Description / Item Details" required>
+                <input type="number" id="exp-amount" placeholder="Amount (PKR)" required>
+                <button type="submit" id="btn-submit" class="btn-add">Add Entry</button>
+            </form>
+        </section>
+
+        <!-- Live Filtering Control Block -->
+        <section class="filter-section">
+            <div>
+                <input type="text" id="search-filter" placeholder="🔍 Search description or details..." oninput="applyFilters()">
+            </div>
+            <div>
+                <select id="category-filter" onchange="applyFilters()">
+                    <option value="ALL">All Categories (No Filter)</option>
+                    <option value="Lab Chemicals">Lab Chemicals</option>
+                    <option value="Medical Supplies">Medical Supplies</option>
+                    <option value="Branch Maintenance">Branch Maintenance</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Refreshments & Welfare">Refreshments & Welfare</option>
+                    <option value="Printing & Stationery">Printing & Stationery</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Unified Expense Table with Sr. No. Header -->
+        <section class="table-section">
+            <table id="expense-table">
+                <thead>
+                    <tr>
+                        <th style="width: 8%;">Sr. No.</th>
+                        <th style="width: 12%;">Date</th>
+                        <th style="width: 20%;">Expense Category</th>
+                        <th style="width: 32%;">Description / Item Details</th>
+                        <th style="width: 13%;">Amount (PKR)</th>
+                        <th style="width: 15%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Dynamic Data Rows -->
+                </tbody>
+                <tfoot>
+                    <tr class="grand-total-row">
+                        <td colspan="4" style="text-align: right; font-weight: bold;">Grand Total:</td>
+                        <td id="grand-total-val" style="font-weight: bold; text-align: right;">0</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+
+        <!-- Official Sign Boards Block Layout -->
+        <section class="signature-section">
+            <div class="sig-box">Prepared By (Accounts Admin)</div>
+            <div class="sig-box">Checked By (Branch Manager)</div>
+            <div class="sig-box">Approved By (Finance Head)</div>
+        </section>
+    </div>
+    <!-- JAVASCRIPT STATE ENGINE -->
+    <script>
+        let BUDGET = parseFloat(localStorage.getItem('idc_budget')) || 500000;
+        let expenses = JSON.parse(localStorage.getItem('idc_expenses')) || [];
+        let editIndex = -1;
+
+        const form = document.getElementById('expense-form');
+        const formTitle = document.getElementById('form-title');
+        const btnSubmit = document.getElementById('btn-submit');
+        const tableBody = document.getElementById('table-body');
+        const totalBudgetEl = document.getElementById('total-budget');
+        const totalExpenseEl = document.getElementById('total-expense');
+        const remainingBudgetEl = document.getElementById('remaining-budget');
+        const grandTotalValEl = document.getElementById('grand-total-val');
+        const remainingCardBlock = document.getElementById('remaining-card-block');
+
+        // New Month/Year State Persistent Loader
+        function initPeriod() {
+            const currentMonthIndex = new Date().getMonth();
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            const savedMonth = localStorage.getItem('idc_report_month') || months[currentMonthIndex];
+            const savedYear = localStorage.getItem('idc_report_year') || new Date().getFullYear().toString();
+
+            document.getElementById('sheet-month').value = savedMonth;
+            document.getElementById('sheet-year').value = savedYear;
+        }
+
+        function saveReportPeriod() {
+            const selectedMonth = document.getElementById('sheet-month').value;
+            const selectedYear = document.getElementById('sheet-year').value;
+            localStorage.setItem('idc_report_month', selectedMonth);
+            localStorage.setItem('idc_report_year', selectedYear);
+        }
+
+        function changeBudget() {
+            let newBudget = prompt("Enter new Total Budget (PKR):", BUDGET);
+            if (newBudget !== null && !isNaN(newBudget) && newBudget.trim() !== "") {
+                BUDGET = parseFloat(newBudget);
+                localStorage.setItem('idc_budget', BUDGET);
+                updateSummary();
+            }
+        }
+
+        function updateSummary() {
+            let total = expenses.reduce((sum, item) => sum + item.amount, 0);
+            let remaining = BUDGET - total;
+
+            totalBudgetEl.innerText = `PKR ${BUDGET.toLocaleString()}`;
+            totalExpenseEl.innerText = `PKR ${total.toLocaleString()}`;
+            remainingBudgetEl.innerText = `PKR ${remaining.toLocaleString()}`;
+            
+            if (remaining < 0) {
+                remainingCardBlock.classList.add('budget-danger');
+            } else {
+                remainingCardBlock.classList.remove('budget-danger');
+            }
+        }
+
+        function applyFilters() {
+            const searchValue = document.getElementById('search-filter').value.toLowerCase().trim();
+            const categoryValue = document.getElementById('category-filter').value;
+            
+            tableBody.innerHTML = '';
+            let filteredTotal = 0;
+            let displayIndex = 1;
+
+            expenses.forEach((item, originalIndex) => {
+                const matchesSearch = item.desc.toLowerCase().includes(searchValue) || item.category.toLowerCase().includes(searchValue);
+                const matchesCategory = (categoryValue === 'ALL') || (item.category === categoryValue);
+
+                if (matchesSearch && matchesCategory) {
+                    filteredTotal += item.amount;
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="text-center" style="font-weight: 600;">${displayIndex}</td>
+                        <td class="text-center">${item.date}</td>
+                        <td>${item.category}</td>
+                        <td>${item.desc}</td>
+                        <td class="text-right">${item.amount.toLocaleString()}</td>
+                        <td class="text-center">
+                            <div class="action-container">
+                                <button class="btn-action-edit" onclick="startEdit(${originalIndex})">Edit</button>
+                                <button class="btn-delete" onclick="deleteExpense(${originalIndex})">Delete</button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                    displayIndex++;
+                }
+            });
+
+            grandTotalValEl.innerText = filteredTotal.toLocaleString();
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const date = document.getElementById('exp-date').value;
+            const category = document.getElementById('exp-category').value;
+            const desc = document.getElementById('exp-desc').value;
+            const amount = parseFloat(document.getElementById('exp-amount').value);
+
+            const itemData = { date, category, desc, amount };
+
+            if (editIndex === -1) {
+                expenses.push(itemData);
+            } else {
+                expenses[editIndex] = itemData;
+                editIndex = -1;
+                formTitle.innerText = "Add New Expense Row";
+                btnSubmit.innerText = "Add Entry";
+                btnSubmit.style.backgroundColor = "#002060";
+            }
+
+            localStorage.setItem('idc_expenses', JSON.stringify(expenses));
+            updateSummary();
+            applyFilters();
+            form.reset();
+        });
+
+        function startEdit(index) {
+            editIndex = index;
+            const target = expenses[index];
+
+            document.getElementById('exp-date').value = target.date;
+            document.getElementById('exp-category').value = target.category;
+            document.getElementById('exp-desc').value = target.desc;
+            document.getElementById('exp-amount').value = target.amount;
+
+            formTitle.innerText = "Edit Selected Expense Row";
+            btnSubmit.innerText = "Update Row";
+            btnSubmit.style.backgroundColor = "#d97706";
+            window.scrollTo({ top: 150, behavior: 'smooth' });
+        }
+
+        function deleteExpense(index) {
+            if (confirm("Are you sure you want to delete this expense row?")) {
+                if (editIndex === index) {
+                    editIndex = -1;
+                    formTitle.innerText = "Add New Expense Row";
+                    btnSubmit.innerText = "Add Entry";
+                    btnSubmit.style.backgroundColor = "#002060";
+                    form.reset();
+                }
+                expenses.splice(index, 1);
+                localStorage.setItem('idc_expenses', JSON.stringify(expenses));
+                updateSummary();
+                applyFilters();
+            }
+        }
+
+        function clearAllData() {
+            if (confirm("⚠️ WARNING: Kya aap waqai is poori sheet ka data clear karna chahte hain? Yeh operation undo nahi ho sakta.")) {
+                expenses = [];
+                localStorage.removeItem('idc_expenses');
+                
+                editIndex = -1;
+                formTitle.innerText = "Add New Expense Row";
+                btnSubmit.innerText = "Add Entry";
+                btnSubmit.style.backgroundColor = "#002060";
+                form.reset();
+                document.getElementById('search-filter').value = '';
+                document.getElementById('category-filter').value = 'ALL';
+
+                updateSummary();
+                applyFilters();
+            }
+        }
+
+        /* EXCEL EXPORT SCRIPT ALIGNMENT WITH MONTH NAME EXTENSION */
+        function exportToExcel() {
+            if (expenses.length === 0) {
+                alert("Sheet khali hai! Export karne ke liye data add karein.");
+                return;
+            }
+
+            const activeMonth = document.getElementById('sheet-month').value;
+            const activeYear = document.getElementById('sheet-year').value;
+
+            let csvContent = "\uFEFF"; 
+            csvContent += `ISLAMABAD DIAGNOSTIC CENTER (PVT) LTD.,,,,\n`;
+            csvContent += `Monthly Expense Sheet - IDC G-8 Branch,,,,\n`;
+            csvContent += `Report Period: ${activeMonth} ${activeYear},,,,\n\n`;
+            csvContent += "Sr. No.,Date,Expense Category,Description / Item Details,Amount (PKR)\n";
+
+            expenses.forEach((item, index) => {
+                let cleanDesc = item.desc.replace(/"/g, '""');
+                csvContent += `${index + 1},${item.date},"${item.category}","${cleanDesc}",${item.amount}\n`;
+            });
+
+            let total = expenses.reduce((sum, item) => sum + item.amount, 0);
+            csvContent += `,,,Grand Total:,${total}\n`;
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
+            // Dynamic Excel Filename Based on Chosen Month and Year
+            link.setAttribute("download", `IDC_G8_Expenses_${activeMonth}_${activeYear}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Initial Boot Setup
+        initPeriod();
+        updateSummary();
+        applyFilters();
+    </script>
+</body>
+</html>
