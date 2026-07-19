@@ -63,7 +63,7 @@
             margin-top: 8px;
         }
 
-        /* NEW MONTH & YEAR SELECTOR DISPLAY BAR */
+        /* MONTH & YEAR SELECTOR DISPLAY BAR */
         .month-selector-bar {
             text-align: center;
             margin-bottom: 25px;
@@ -322,20 +322,20 @@
             .card { border: 1px solid #333 !important; }
             .signature-section { margin-top: 100px; page-break-inside: avoid; }
         }
-    </style>
-</head>
+    </style> <!-- CRITICAL CLOSING TAG FIXED -->
+</head> <!-- CRITICAL CLOSING TAG FIXED -->
 <body>
     <div class="container">
-        <!-- Official direct cloud source used to fix breaking images completely -->
+        <!-- Main Header Area with Alignment Fix -->
         <header class="main-header">
             <div class="header-title-container">
-                <img src="https://idc.net.pk" alt="IDC Corporate Logo" class="idc-logo">
+                <img src="LogoJPG" alt="IDC Corporate Logo" class="idc-logo">
                 <h1>ISLAMABAD DIAGNOSTIC CENTER (PVT) LTD.</h1>
             </div>
             <p>Monthly Expense Sheet IDC G-8 Branch Islamabad</p>
         </header>
 
-        <!-- New Month & Year Dynamic Selection Bar -->
+        <!-- Month & Year Dynamic Selection Bar -->
         <div class="month-selector-bar">
             <label for="sheet-month">Report Month:</label>
             <select id="sheet-month" onchange="saveReportPeriod()">
@@ -453,12 +453,11 @@
 
         <!-- Official Sign Boards Block Layout -->
         <section class="signature-section">
-            <div class="sig-box">Prepared By</div>
-            <div class="sig-box">Checked By </div>
-            <div class="sig-box">Approved By </div>
+            <div class="sig-box">Prepared By (Accounts Admin)</div>
+            <div class="sig-box">Checked By (Branch Manager)</div>
+            <div class="sig-box">Approved By (Finance Head)</div>
         </section>
     </div>
-
     <!-- JAVASCRIPT STATE ENGINE -->
     <script>
         let BUDGET = parseFloat(localStorage.getItem('idc_budget')) || 500000;
@@ -475,7 +474,6 @@
         const grandTotalValEl = document.getElementById('grand-total-val');
         const remainingCardBlock = document.getElementById('remaining-card-block');
 
-        // New Month/Year State Persistent Loader
         function initPeriod() {
             const currentMonthIndex = new Date().getMonth();
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -629,7 +627,6 @@
             }
         }
 
-        /* EXCEL EXPORT SCRIPT ALIGNMENT WITH MONTH NAME EXTENSION */
         function exportToExcel() {
             if (expenses.length === 0) {
                 alert("Sheet khali hai! Export karne ke liye data add karein.");
@@ -658,7 +655,6 @@
             const url = URL.createObjectURL(blob);
             
             link.setAttribute("href", url);
-            // Dynamic Excel Filename Based on Chosen Month and Year
             link.setAttribute("download", `IDC_G8_Expenses_${activeMonth}_${activeYear}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
@@ -666,7 +662,6 @@
             document.body.removeChild(link);
         }
 
-        // Initial Boot Setup
         initPeriod();
         updateSummary();
         applyFilters();
