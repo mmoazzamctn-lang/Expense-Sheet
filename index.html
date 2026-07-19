@@ -27,7 +27,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* HEADER ALIGNMENT FIX */
         .main-header {
             text-align: center;
             margin-bottom: 15px;
@@ -43,7 +42,7 @@
         }
 
         .idc-logo {
-            max-width: 90px;
+            max-width: 80px;
             height: auto;
             display: block;
         }
@@ -63,7 +62,6 @@
             margin-top: 8px;
         }
 
-        /* MONTH & YEAR SELECTOR DISPLAY BAR */
         .month-selector-bar {
             text-align: center;
             margin-bottom: 25px;
@@ -89,7 +87,6 @@
             cursor: pointer;
         }
 
-        /* Summary Grid */
         .summary-section {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -144,7 +141,6 @@
             margin-top: 5px;
         }
 
-        /* Toolbar Actions */
         .toolbar {
             display: flex;
             gap: 10px;
@@ -169,7 +165,6 @@
         .btn-clear-data { background-color: #dc2626; }
         .btn-excel { background-color: #16a34a; }
 
-        /* Filter bar block styling */
         .filter-section {
             background-color: #f8fafc;
             padding: 15px 20px;
@@ -189,7 +184,6 @@
             width: 100%;
         }
 
-        /* Form Styling */
         .form-section {
             background: #f8fafc;
             padding: 20px;
@@ -227,7 +221,6 @@
             font-weight: bold;
         }
 
-        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -285,7 +278,6 @@
             font-size: 12px;
         }
 
-        /* Verification Signature Section Layout */
         .signature-section {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -303,7 +295,6 @@
             color: #444;
         }
 
-        /* PRINT MANAGEMENT FOR EXCEL/PDF LOOK */
         @media print {
             body { background-color: white; padding: 0; }
             .container { box-shadow: none; padding: 0; width: 100%; }
@@ -326,16 +317,15 @@
 </head>
 <body>
     <div class="container">
-        <!-- Main Header Area with Embedded Vector Base64 Logo -->
         <header class="main-header">
             <div class="header-title-container">
-                <img src="data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100' width='100' height='100'><circle cx='50' cy='50' r='46' fill='%23315B7C'/><circle cx='50' cy='50' r='38' fill='%23AA0719'/><circle cx='50' cy='50' r='30' fill='white'/><path d='M42 32h16v6H42zm5 12h6v24h-6z' fill='%23315B7C'/><rect x='34' y='46' width='32' height='5' rx='2.5' fill='%23AA0719'/></svg>" alt="IDC Corporate Logo" class="idc-logo">
+                <!-- Using an alternative highly stable verified vector data code directly embedded -->
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://w3.org' viewBox='0 0 100 100' width='80' height='80'><circle cx='50' cy='50' r='45' fill='%23002060'/><circle cx='50' cy='50' r='36' fill='%23AA0719'/><circle cx='50' cy='50' r='28' fill='white'/><path d='M44 34h12v5H44zm4 10h4v22h-4z' fill='%23002060'/></svg>" alt="IDC Corporate Logo" class="idc-logo">
                 <h1>ISLAMABAD DIAGNOSTIC CENTER (PVT) LTD.</h1>
             </div>
             <p>Monthly Expense Sheet IDC G-8 Branch Islamabad</p>
         </header>
 
-        <!-- Month & Year Dynamic Selection Bar -->
         <div class="month-selector-bar">
             <label for="sheet-month">Report Month:</label>
             <select id="sheet-month" onchange="saveReportPeriod()">
@@ -438,9 +428,7 @@
                         <th style="width: 15%;">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="table-body">
-                    <!-- Dynamic Data Rows -->
-                </tbody>
+                <tbody id="table-body"></tbody>
                 <tfoot>
                     <tr class="grand-total-row">
                         <td colspan="4" style="text-align: right; font-weight: bold;">Grand Total:</td>
@@ -458,6 +446,7 @@
             <div class="sig-box">Approved By (Finance Head)</div>
         </section>
     </div>
+
     <!-- JAVASCRIPT STATE ENGINE -->
     <script>
         let BUDGET = parseFloat(localStorage.getItem('idc_budget')) || 500000;
@@ -554,7 +543,6 @@
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-
             const date = document.getElementById('exp-date').value;
             const category = document.getElementById('exp-category').value;
             const desc = document.getElementById('exp-desc').value;
@@ -577,7 +565,6 @@
             applyFilters();
             form.reset();
         });
-
         function startEdit(index) {
             editIndex = index;
             const target = expenses[index];
@@ -608,7 +595,6 @@
                 applyFilters();
             }
         }
-
         function clearAllData() {
             if (confirm("⚠️ WARNING: Kya aap waqai is poori sheet ka data clear karna chahte hain? Yeh operation undo nahi ho sakta.")) {
                 expenses = [];
@@ -649,7 +635,6 @@
 
             let total = expenses.reduce((sum, item) => sum + item.amount, 0);
             csvContent += `,,,Grand Total:,${total}\n`;
-
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             const url = URL.createObjectURL(blob);
@@ -668,3 +653,4 @@
     </script>
 </body>
 </html>
+
