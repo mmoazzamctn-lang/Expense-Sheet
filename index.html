@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDC G-8 Branch - Monthly Expense Portal</title>
+    <!-- SILENCES THE BROWSER FAVICON CODES ERROR COMPLETELY -->
+    <link rel="icon" href="data:,">
     <style>
         * {
             margin: 0;
@@ -27,6 +29,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
+        /* HEADER & GRAPHIC LOGO ALIGNMENT */
         .main-header {
             text-align: center;
             margin-bottom: 15px;
@@ -37,14 +40,23 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
-        .idc-logo {
-            max-width: 80px;
-            height: auto;
-            display: block;
+        .idc-badge-emblem {
+            width: 50px;
+            height: 50px;
+            background-color: #AA0719;
+            border: 4.5px solid #002060;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
         .main-header h1 {
@@ -62,6 +74,7 @@
             margin-top: 8px;
         }
 
+        /* MONTH & YEAR SELECTOR DISPLAY BAR */
         .month-selector-bar {
             text-align: center;
             margin-bottom: 25px;
@@ -87,6 +100,7 @@
             cursor: pointer;
         }
 
+        /* Summary Grid */
         .summary-section {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -141,6 +155,7 @@
             margin-top: 5px;
         }
 
+        /* Toolbar Actions */
         .toolbar {
             display: flex;
             gap: 10px;
@@ -165,6 +180,7 @@
         .btn-clear-data { background-color: #dc2626; }
         .btn-excel { background-color: #16a34a; }
 
+        /* Filter bar block styling */
         .filter-section {
             background-color: #f8fafc;
             padding: 15px 20px;
@@ -184,6 +200,7 @@
             width: 100%;
         }
 
+        /* Form Styling */
         .form-section {
             background: #f8fafc;
             padding: 20px;
@@ -221,6 +238,7 @@
             font-weight: bold;
         }
 
+        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -278,6 +296,7 @@
             font-size: 12px;
         }
 
+        /* Verification Signature Section Layout */
         .signature-section {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -295,25 +314,7 @@
             color: #444;
         }
 
-        @media print {
-            body { background-color: white; padding: 0; }
-            .container { box-shadow: none; padding: 0; width: 100%; }
-            .form-section, .toolbar, .filter-section, .action-container, th:last-child, td:last-child, .btn-edit-budget {
-                display: none !important;
-            }
-            .month-selector-bar select {
-                border: none !important;
-                background: transparent !important;
-                appearance: none !important;
-                -webkit-appearance: none !important;
-                font-size: 16px !important;
-                color: #002060 !important;
-            }
-            th, td { padding: 10px; border: 1px solid #333; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .card { border: 1px solid #333 !important; }
-            .signature-section { margin-top: 100px; page-break-inside: avoid; }
-        }
-                /* SYSTEM FOOTER STYLING */
+        /* SYSTEM FOOTER INTEGRATED IN CSS CLASS ENGINE */
         .portal-footer {
             text-align: center; 
             margin-top: 50px; 
@@ -327,6 +328,26 @@
         .portal-footer-author {
             color: #002060; 
             font-weight: 700;
+        }
+
+        /* PRINT MANAGEMENT FOR EXCEL/PDF LOOK */
+        @media print {
+            body { background-color: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; width: 100%; }
+            .form-section, .toolbar, .filter-section, .action-container, .portal-footer, th:last-child, td:last-child, .btn-edit-budget {
+                display: none !important;
+            }
+            .month-selector-bar select {
+                border: none !important;
+                background: transparent !important;
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                font-size: 16px !important;
+                color: #002060 !important;
+            }
+            th, td { padding: 10px; border: 1px solid #333; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .card { border: 1px solid #333 !important; }
+            .signature-section { margin-top: 100px; page-break-inside: avoid; }
         }
     </style>
 </head>
